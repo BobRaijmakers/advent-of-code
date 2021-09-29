@@ -3,9 +3,11 @@ const expenseReport = [1438, 781, 1917, 1371, 1336, 1802, 1566, 1878, 737, 1998,
 function getResult(expenseArray) {
     for (const expensei of expenseArray) {
         for (const expensej of expenseArray) {
-            if (expensei + expensej === 2020) {
-                let multipliedexpense = expensei * expensej;
-                return multipliedexpense
+            for (const expensek of expenseArray) {
+                if (expensei + expensej + expensek === 2020) {
+                    let multipliedexpense = expensei * expensej * expensek;
+                    return multipliedexpense
+                }
             }
         }
     }
