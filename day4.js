@@ -45,7 +45,7 @@ async function getPassportObjects(passportFilepath) {
         // End of file
         // Check final local passport
         checkPassport(localPassportObject); 
-        console.log("File done");
+        // console.log("File done");
     })
 
     await once(readInterface, "close");
@@ -54,14 +54,26 @@ async function getPassportObjects(passportFilepath) {
 
 function checkPassport(passportObject) {
     let presentKeys = Object.keys(passportObject);
+
+    // console.log(passportObject);
+    // console.log("byr: " + byrValidate(passportObject, presentKeys));
+    // console.log("iyr: " + iyrValidate(passportObject, presentKeys));
+    // console.log("eyr: " + eyrValidate(passportObject, presentKeys));
+    // console.log("hgt: " + hgtValidate(passportObject, presentKeys));
+    // console.log("hcl: " + hclValidate(passportObject, presentKeys));
+    // console.log("ecl: " + eclValidate(passportObject, presentKeys));
+    // console.log("pid: " + pidValidate(passportObject, presentKeys));
+    // console.log("cid: " + cidValidate(passportObject, presentKeys));
+
     if (
-        presentKeys.includes("byr") && 
-        presentKeys.includes("iyr") && 
-        presentKeys.includes("eyr") &&
-        presentKeys.includes("hgt") &&
-        presentKeys.includes("hcl") &&
-        presentKeys.includes("ecl") &&
-        presentKeys.includes("pid")
+        byrValidate(passportObject, presentKeys) &&
+        iyrValidate(passportObject, presentKeys) &&
+        eyrValidate(passportObject, presentKeys) &&
+        hgtValidate(passportObject, presentKeys) &&
+        hclValidate(passportObject, presentKeys) &&
+        eclValidate(passportObject, presentKeys) &&
+        pidValidate(passportObject, presentKeys) &&
+        cidValidate(passportObject, presentKeys)
     ) {
         // Passport is valid, all necessary data present
         // console.log(passportObject);
@@ -78,4 +90,97 @@ function checkPassport(passportObject) {
 (async() => {
     await getPassportObjects(passportFilepath);
     console.log("Valid passports: " + global.validPassportCounter);
+    console.log("Invalid passports: " + global.invalidPassportCounter);
 })();
+
+function byrValidate(passportObject, presentKeys) {
+    if (presentKeys.includes("byr")) {
+        let param = passportObject["byr"];
+        return Number(param) >= 1920 && Number(param) <= 2002;
+    } else {
+        // Missing data
+        return false;
+    }
+}
+
+function iyrValidate(passportObject, presentKeys) {
+    if (presentKeys.includes("iyr")) {
+        let param = passportObject["iyr"];
+        return Number(param) >= 2010 && Number(param) <= 2020;
+    } else {
+        // Missing data
+        return false;
+    }
+}
+
+function eyrValidate(passportObject, presentKeys) {
+    if (presentKeys.includes("eyr")) {
+        let param = passportObject["eyr"];
+        return Number(param) >= 2020 && Number(param) <= 2030;
+    } else {
+        // Missing data
+        return false;
+    }
+}
+
+function hgtValidate(passportObject, presentKeys) {
+    if (presentKeys.includes("hgt")) {
+        let param = passportObject["hgt"];
+        if (param.includes("in")) {
+            // Inches height
+            let height = param.replace("in", "");
+            if (!isNaN(height)) {
+                return Number(height) >= 59 && Number(height) <= 76;
+            } else return false;
+        } else if (param.includes("cm")) {
+            // cm height
+            let height = param.replace("cm", "");
+            if (!isNaN(height)) {
+                return Number(height) >= 150 && Number(height) <= 193;
+            } else return false;
+        } else {
+            return false;
+        }
+    } else {
+        // Missing data
+        return false;
+    }
+}
+
+function hclValidate(passportObject, presentKeys) {
+    if (presentKeys.includes("hcl")) {
+        let param = passportObject["hcl"];
+        let hexadecimalRegex = new RegExp("#[A-Fa-f0-9]+$", "g");
+        return hexadecimalRegex.test(param);
+    } else {
+        // Missing data
+        return false;
+    }
+}
+
+function eclValidate(passportObject, presentKeys) {
+    if (presentKeys.includes("ecl")) {
+        let param = passportObject["ecl"];
+        let haircolors = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"];
+        return haircolors.includes(param);    
+    } else {
+        // Missing data
+        return false;
+    }
+}
+
+function pidValidate(passportObject, presentKeys) {
+    if (presentKeys.includes("pid")) {
+        let param = passportObject["pid"];
+        let pidRegex = new RegExp("^[0-9]{9}$", "gm");
+        return pidRegex.test(param);
+    } else {
+        // Missing data
+        return false;
+    }
+}
+
+function cidValidate(passportObject, presentKeys) {
+    // Always ignored
+    return true;
+}
