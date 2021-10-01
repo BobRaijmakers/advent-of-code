@@ -78,6 +78,15 @@ function getSeatColumn(boardingPassColumn) {
 
 (async() => {
     let seatIDs = await getSeatIDs(boardingPassesFile);
-    let highestSeatID = Math.max.apply(null, seatIDs);
-    console.log(highestSeatID);
+    
+    for (let i = 0; i < 930; i++) {
+        if (!seatIDs.includes(i)) {
+            if (seatIDs.includes(i+1) && seatIDs.includes(i-1)) {
+                console.log(i);
+            }
+        }
+    }
+    
+    // let highestSeatID = Math.max.apply(null, seatIDs);
+    // console.log(highestSeatID);
 })();
