@@ -10,6 +10,12 @@ let passportFilepath = "./day4.txt";
 global.validPassportCounter = 0;
 global.invalidPassportCounter = 0;
 
+/**
+ * Main function to obtain passport objects from file and structuring in objects while 
+ * immediately checking validity and updating counteers
+ * @param passportFilepath path for the file containing the inputs
+ * @returns void
+ */
 async function getPassportObjects(passportFilepath) {
     const readInterface = readline.createInterface({
         input: fs.createReadStream(passportFilepath)
@@ -52,6 +58,10 @@ async function getPassportObjects(passportFilepath) {
     return;
 }
 
+/**
+ * Function for validating passport on the basis of the passportObject and adding to counters
+ * @param passportObject 
+ */
 function checkPassport(passportObject) {
     let presentKeys = Object.keys(passportObject);
 

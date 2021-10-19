@@ -4,6 +4,11 @@ const readline = require("readline");
 
 let answerFile = "./day6.txt";
 
+/**
+ * Function for retrieving an array with objects for answers and amount of answers per group 
+ * @param answerFile file path to input
+ * @returns array with array of answers for each group
+ */
 async function getGroupAnswers(answerFile) {
     let allGroupAnswers = [];
     let localGroupAnswers = [];
@@ -37,6 +42,11 @@ async function getGroupAnswers(answerFile) {
     return allGroupAnswers;
 }
 
+/**
+ * Remove duplicates from the local groupanswers and adding them to the all group answers array
+ * @param allGroupAnswers array with objects from all groups
+ * @param localGroupAnswers array with answers for a group
+ */
 function consolidateLocalGroupAnswers(allGroupAnswers, localGroupAnswers) {
     let uniqueAnswers = [...new Set(localGroupAnswers)];
     allGroupAnswers.push({

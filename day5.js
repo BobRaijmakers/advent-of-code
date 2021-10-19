@@ -6,6 +6,11 @@ let boardingPassesFile = "./day5.txt";
 const planeRows = 127;
 const planeColumns = 7;
 
+/**
+ * Function for retrieving seatIDs from file containing boardingPass IDs
+ * @param boardingPassesFile inpupt file path
+ * @returns array of all seatIDs
+ */
 async function getSeatIDs(boardingPassesFile) {
     let seatIDs = [];
 
@@ -29,6 +34,11 @@ async function getSeatIDs(boardingPassesFile) {
     return seatIDs;
 }
 
+/**
+ * Function to retrieve seatID on basis of boardingPassID
+ * @param boardingPassID 
+ * @returns seatID
+ */
 function getSeatID(boardingPassID) {
     let seatRow = getSeatRow(boardingPassID.substring(0, 7));
     let seatColumn = getSeatColumn(boardingPassID.substring(7, 10));
@@ -77,8 +87,10 @@ function getSeatColumn(boardingPassColumn) {
 }
 
 (async() => {
+    // Retrieve all seatIDs
     let seatIDs = await getSeatIDs(boardingPassesFile);
     
+    // Check for non existing seatID for which conneting seatIDs exist
     for (let i = 0; i < 930; i++) {
         if (!seatIDs.includes(i)) {
             if (seatIDs.includes(i+1) && seatIDs.includes(i-1)) {

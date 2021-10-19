@@ -1,3 +1,5 @@
+// Array with all input
+// TODO: use seperate file for input
 let inputList = [ 
     "4-5 l: rllllj", 
     "4-10 s: ssskssphrlpscsxrfsr", 
@@ -1000,6 +1002,7 @@ let inputList = [
     "9-17 b: vbbwhjntdzhbbhmbbq", 
     "6-8 h: hlhhhhrdjncphc" 
     ];
+
 let validPasswordCounter = 0;
 
 let structuredObjectList = getStructuredObject(inputList);
@@ -1013,6 +1016,12 @@ for (const passwordObject of structuredObjectList) {
 
 console.log(validPasswordCounter);
 
+/**
+ * Function for structuring the password and the rules in a single object, 
+ * return everythin in an array
+ * @param inputList Array of all input 
+ * @returns structuredObjectList
+ */
 function getStructuredObject(inputList) {
     let minRegex = /[^-]*/;
     let maxRegex = /(?<=\-)(.*?)(?=\ )/;
@@ -1042,6 +1051,11 @@ function getStructuredObject(inputList) {
     return structuredObjectList
 }
 
+/**
+ * Function to check passwordObject for validity
+ * @param passwordObject containing password and rules
+ * @returns boolean id password is valid
+ */
 function checkPassword(passwordObject) {
     let char1 = passwordObject.password.charAt(parseInt(passwordObject.min)-1);
     let char2 = passwordObject.password.charAt(parseInt(passwordObject.max)-1);
@@ -1052,6 +1066,12 @@ function checkPassword(passwordObject) {
     }
 }
 
+/**
+ * @deprecated
+ * Function to check passwordObject for validity
+ * @param passwordObject containing password and rules
+ * @returns boolean id password is valid
+ */
 function checkPasswordOld(passwordObject) {
     let occurence = (passwordObject.password.match(new RegExp(passwordObject.char, "g")) || []).length;
     if (parseInt(occurence) >= parseInt(passwordObject.min) && parseInt(occurence) <= parseInt(passwordObject.max)) {
