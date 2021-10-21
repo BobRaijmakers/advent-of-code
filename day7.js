@@ -53,8 +53,8 @@ async function getRules(rulesFile) {
 /**
  * 
  * @param rules object containing all the rules 
- * @param innerBag the innerbag that we are cu
- * @param outerBag 
+ * @param outerBag the outerBag that we are checking
+ * @returns boolean if bag will fit
  */
 function canItFitShinyGold(rules, outerBag) {
     // First check if outerBag is in rules
@@ -76,9 +76,13 @@ function canItFitShinyGold(rules, outerBag) {
     };
 }
 
-(async () => {
+/**
+ * Function to retrieve the number of bags that could fit a shiny gold bag
+ * @param rules Object containing all rules 
+ * @returns integer of amount of bags containing shiny gold bag
+ */
+function getNumberOfShinyGold(rules) {
     let counter = 0;
-    let rules = await getRules(rulesFile);
     let outerBags = Object.keys(rules);
     for (const outerBag of outerBags) {
         if (canItFitShinyGold(rules, outerBag)) {
@@ -86,5 +90,11 @@ function canItFitShinyGold(rules, outerBag) {
             counter++
         }
     }
-    console.log(counter);
+    return counter;
+}
+
+(async () => {
+    let rules = await getRules(rulesFile);
+    let numberOfShinyGoldOptions = getNumberOfShinyGold(rules);
+    console.log(numberOfShinyGoldOptions);
 })();
