@@ -1,6 +1,7 @@
 const { once } = require("events");
 const fs = require("fs");
 const readline = require("readline");
+const { createImportSpecifier } = require("typescript");
 
 let rulesFile = "./day7.txt";
 
@@ -18,6 +19,12 @@ async function getRules(rulesFile) {
 
     readInterface.on('line', line => {
         if (line) {
+            // Remove . from rule
+            line = line.replace(".","");
+
+            // Only singular bag
+            line = line.replaceAll("bags", "bag");
+
             let keyValue = line.split(" contain ");
             if (keyValue && keyValue.length == 2) {
                 let localRulesObject = {};
@@ -43,7 +50,41 @@ async function getRules(rulesFile) {
     return rulesObject;
 }
 
+/**
+ * 
+ * @param rules object containing all the rules 
+ * @param innerBag the innerbag that we are cu
+ * @param outerBag 
+ */
+function canItFitShinyGold(rules, outerBag) {
+    // First check if outerBag is in rules
+    if (rules.hasOwnProperty(outerBag)){
+        // Can outerBag directly contain a shiny gold bag
+        let innerBags = Object.keys(rules[outerBag]);
+        for (const innerBag of innerBags) {
+            if (innerBag.includes("shiny gold")) {
+                return true;
+            } else {
+                if (canItFitShinyGold(rules, innerBag)){
+                    return true;
+                }
+            }
+        }
+    } else {
+        // outerBag not found in rules
+        return false;
+    };
+}
+
 (async () => {
+    let counter = 0;
     let rules = await getRules(rulesFile);
-    console.log(rules);
+    let outerBags = Object.keys(rules);
+    for (const outerBag of outerBags) {
+        if (canItFitShinyGold(rules, outerBag)) {
+            console.log(`${outerBag} can contain a shiny gold bag`);
+            counter++
+        }
+    }
+    console.log(counter);
 })();
