@@ -2,7 +2,7 @@ const { once } = require("events");
 const fs = require("fs");
 const readline = require("readline");
 
-let answerFile = "./day6.txt";
+let answerFile = "./2020/day6.txt";
 
 /**
  * Function for retrieving an array with objects for answers and amount of answers per group 

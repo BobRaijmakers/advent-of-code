@@ -3,7 +3,7 @@ const fs = require("fs");
 const readline = require("readline");
 const { createImportSpecifier } = require("typescript");
 
-let rulesFile = "./day7.txt";
+let rulesFile = "./2020/day7.txt";
 
 /**
  * Function to retrieve object with all luggage regulation rules

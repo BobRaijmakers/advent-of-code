@@ -4,7 +4,7 @@ const fs = require("fs");
 const readline = require("readline");
 
 // Transform txt to objects in array
-let passportFilepath = "./day4.txt";
+let passportFilepath = "./2020/day4.txt";
 
 // Counters
 global.validPassportCounter = 0;

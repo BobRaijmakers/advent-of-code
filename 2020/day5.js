@@ -2,7 +2,7 @@ const { once } = require("events");
 const fs = require("fs");
 const readline = require("readline");
 
-let boardingPassesFile = "./day5.txt";
+let boardingPassesFile = "./2020/day5.txt";
 const planeRows = 127;
 const planeColumns = 7;
 
