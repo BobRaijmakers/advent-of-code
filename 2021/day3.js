@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 // Puzzle input into array
-const inputArray = fs.readFileSync("./2021/day3.txt").toString().split("\n");
+const inputArray = fs.readFileSync("./2021/day3.txt").toString().split("\r\n");
 
 // CounterObject
 let counterObject = {
@@ -86,3 +86,47 @@ let gammaDec = parseInt(gammaRate, 2);
 let epsilonDec = parseInt(epsilonRate, 2);
 let powerConsumption = gammaDec * epsilonDec;
 console.log(powerConsumption);
+
+// Create binary object for filtering purposes
+let binaryObjects = [];
+inputArray.forEach(binary => {
+    let localObject = {
+        "value": binary
+    };
+    for (let i = 0; i < binary.length - 1; i++) {
+        localObject[i] = binary[i];
+    }
+    binaryObjects.push(localObject);
+});
+
+// console.log(binaryObjects);
+
+// TODO: Recalculate after each filter!
+// Loop through bit criteria using counterObject and filter
+let oxygenRate = "";
+let co2Rate = "";
+let oxygenValues = binaryObjects;
+let co2Values = binaryObjects;
+let keys = Object.keys(counterObject)
+for (let i = 0; i < keys.length; i++) {
+    let mostCommon = "";
+    let leastCommon = "";
+    if (counterObject[i][0] > counterObject[i][1]) {
+        mostCommon = 0;
+        leastCommon = 1;
+    } else if (counterObject[i][0] < counterObject[i][1]) {
+        mostCommon = 1;
+        leastCommon = 0;
+    }
+    if (!oxygenRate) {
+        console.log(oxygenValues);
+        console.log(`MostCommon: ${mostCommon}, Index: ${i}`);
+        oxygenValues = oxygenValues.filter(value => value[i] == mostCommon)
+        if (oxygenValues.length === 1 ) {
+            console.log("eentje over");
+            oxygenRate = oxygenValues[0]["value"];
+        }
+    }
+}
+
+console.log(oxygenRate)
