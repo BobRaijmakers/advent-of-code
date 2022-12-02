@@ -29,7 +29,6 @@ public class Day2 implements Day {
         Choice myChoice = null;
         Choice theirChoice = choiceMapping.get(values[0]);
         if (part == Part.ONE) {
-            choiceMapping = Map.of("A", Choice.ROCK, "B", Choice.PAPER, "C", Choice.SCISSOR, "X", Choice.ROCK, "Y", Choice.PAPER, "Z", Choice.SCISSOR);
             myChoice = choiceMapping.get(values[1]);
         } else if (part == Part.TWO) {
             myChoice = getMyChoice(theirChoice, values[1]);
