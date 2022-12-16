@@ -4,7 +4,7 @@ import main.java.days.*;
 
 public class Main {
     public static void main(String[] args) {
-        Day day = new Day6();
+        Day day = new Day7();
         String answer1 = day.getAnswer(Day.Part.ONE);
         String answer2 = day.getAnswer(Day.Part.TWO);
         System.out.println(answer1);
