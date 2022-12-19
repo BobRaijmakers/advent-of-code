@@ -11,6 +11,8 @@ public class Day7 implements Day {
 
     String fileName = "day7.txt";
 
+    Integer sizeThreshold = 100000;
+
     @Override
     public String getAnswer(Part part) {
         Directory currentDirectory = new Directory("/", null);
@@ -23,7 +25,33 @@ public class Day7 implements Day {
             }
         }
         Directory topDirectory = getTopDirectory(currentDirectory);
-        return null;
+        List<Directory> smallDirectories = getSmallDirectories(topDirectory);
+        Integer sumOfDirectorySize = getSumOfDirectorySize(smallDirectories);
+        return String.valueOf(sumOfDirectorySize);
+    }
+
+    private Integer getSumOfDirectorySize(List<Directory> smallDirectories) {
+        Integer sum = 0;
+        for (Directory directory : smallDirectories) {
+            sum += getRecursiveFileSize(directory);
+        }
+        return sum;
+    }
+
+    private List<Directory> getSmallDirectories(Directory topDirectory) {
+        ArrayList<Directory> smallDirectories = new ArrayList<>();
+        checkAllDirectories(topDirectory, smallDirectories);
+        return smallDirectories;
+    }
+
+    private void checkAllDirectories(Directory topDirectory, ArrayList<Directory> smallDirectories) {
+        for (Directory localDirectory : topDirectory.getChildDirectories()) {
+            Integer totalRecursiveSize = getRecursiveFileSize(localDirectory);
+            if (totalRecursiveSize < sizeThreshold) {
+                smallDirectories.add(localDirectory);
+            }
+            checkAllDirectories(localDirectory, smallDirectories);
+        }
     }
 
     private Directory getTopDirectory(Directory currentDirectory) {
@@ -51,6 +79,36 @@ public class Day7 implements Day {
         } else {
             String[] outputSplit = output.split(" ");
             currentDirectory.addFile(new File(Integer.parseInt(outputSplit[0]), outputSplit[1]));
+        }
+    }
+
+    public Integer getFileSize(Directory directory) {
+        Integer totalSize = 0;
+        for (File file : directory.getFileList()) {
+            totalSize += file.getSize();
+        }
+        return totalSize;
+    }
+
+    public Integer getRecursiveFileSize(Directory topDirectory) {
+        Integer recursiveFileSize = getFileSize(topDirectory);
+        ArrayList<Directory> directories = getRecursiveDirectories(topDirectory);
+        for (Directory directory : directories) {
+            recursiveFileSize += getFileSize(directory);
+        }
+        return recursiveFileSize;
+    }
+
+    private ArrayList<Directory> getRecursiveDirectories(Directory directory) {
+        ArrayList<Directory> directories = new ArrayList<>();
+        getChildDirectories(directory, directories);
+        return directories;
+    }
+
+    private void getChildDirectories(Directory directory, ArrayList<Directory> directories) {
+        for (Directory localDirectory : directory.getChildDirectories()) {
+            directories.add(localDirectory);
+            getChildDirectories(localDirectory, directories);
         }
     }
 
@@ -114,10 +172,6 @@ public class Day7 implements Day {
 
         public void setName(String name) {
             this.name = name;
-        }
-
-        public Integer getFileSize() {
-            fileList.forEach(file -> file.getSize());
         }
     }
 
