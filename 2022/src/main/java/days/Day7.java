@@ -3,9 +3,7 @@ package main.java.days;
 import main.java.Day;
 import main.java.util.FilesUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Day7 implements Day {
 
@@ -25,9 +23,27 @@ public class Day7 implements Day {
             }
         }
         Directory topDirectory = getTopDirectory(currentDirectory);
-        List<Directory> smallDirectories = getSmallDirectories(topDirectory);
-        Integer sumOfDirectorySize = getSumOfDirectorySize(smallDirectories);
-        return String.valueOf(sumOfDirectorySize);
+        if (part == Part.ONE) {
+            List<Directory> smallDirectories = getMaxThresholdDirectories(topDirectory);
+            Integer sumOfDirectorySize = getSumOfDirectorySize(smallDirectories);
+            return String.valueOf(sumOfDirectorySize);
+        } else if (part == Part.TWO) {
+            Integer diskSize = 70000000;
+            Integer updateSize = 30000000;
+            Integer used = getRecursiveFileSize(topDirectory);
+            Integer unused = diskSize - used;
+            Integer spaceNeeded = updateSize - unused;
+            sizeThreshold = spaceNeeded;
+            List<Directory> candidateDirectories = getMinThresholdDirectories(topDirectory);
+            Integer deleteItemSize = getSmallestDirectory(candidateDirectories);
+            return String.valueOf(deleteItemSize);
+        }
+        return null;
+    }
+
+    private Integer getSmallestDirectory(List<Directory> candidateDirectories) {
+        Directory deleteItem = Collections.min(candidateDirectories, (d1, d2) -> Integer.compare(getRecursiveFileSize(d1), getRecursiveFileSize(d2)));
+        return getRecursiveFileSize(deleteItem);
     }
 
     private Integer getSumOfDirectorySize(List<Directory> smallDirectories) {
@@ -38,19 +54,27 @@ public class Day7 implements Day {
         return sum;
     }
 
-    private List<Directory> getSmallDirectories(Directory topDirectory) {
+    private List<Directory> getMaxThresholdDirectories(Directory topDirectory) {
         ArrayList<Directory> smallDirectories = new ArrayList<>();
-        checkAllDirectories(topDirectory, smallDirectories);
+        checkAllDirectories(topDirectory, smallDirectories, true);
         return smallDirectories;
     }
 
-    private void checkAllDirectories(Directory topDirectory, ArrayList<Directory> smallDirectories) {
+    private List<Directory> getMinThresholdDirectories(Directory topDirectory) {
+        ArrayList<Directory> smallDirectories = new ArrayList<>();
+        checkAllDirectories(topDirectory, smallDirectories, false);
+        return smallDirectories;
+    }
+
+    private void checkAllDirectories(Directory topDirectory, ArrayList<Directory> thresholdDirectories, boolean max) {
         for (Directory localDirectory : topDirectory.getChildDirectories()) {
             Integer totalRecursiveSize = getRecursiveFileSize(localDirectory);
-            if (totalRecursiveSize < sizeThreshold) {
-                smallDirectories.add(localDirectory);
+            if (max && totalRecursiveSize < sizeThreshold) {
+                thresholdDirectories.add(localDirectory);
+            } else if (!max && totalRecursiveSize > sizeThreshold) {
+                thresholdDirectories.add(localDirectory);
             }
-            checkAllDirectories(localDirectory, smallDirectories);
+            checkAllDirectories(localDirectory, thresholdDirectories, max);
         }
     }
 
